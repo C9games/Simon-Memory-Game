@@ -1,0 +1,140 @@
+int RLED = 2;
+int BLED = 3;
+int YLED = 4;
+int GLED = 5;
+int BUZZER = 6;
+int RBUTTON = 7;
+int BBUTTON = 8;
+int YBUTTON = 9;
+int GBUTTON = 10;
+
+int colorNums[100];
+int waveNum = 0;
+
+void setup() {
+  pinMode(RLED, OUTPUT);
+  pinMode(BLED, OUTPUT);
+  pinMode(YLED, OUTPUT);
+  pinMode(GLED, OUTPUT);
+  pinMode(BUZZER, OUTPUT);
+  pinMode(RBUTTON, INPUT_PULLUP);
+  pinMode(BBUTTON, INPUT_PULLUP);
+  pinMode(YBUTTON, INPUT_PULLUP);
+  pinMode(GBUTTON, INPUT_PULLUP);
+}
+
+int ButtonToNumber() {
+  if (digitalRead(RBUTTON) == LOW) {
+    int chosenButton = 1;
+    return chosenButton;
+  }
+  if (digitalRead(BBUTTON) == LOW) {
+    int chosenButton = 2;
+    return chosenButton;
+  }
+  if (digitalRead(YBUTTON) == LOW) {
+    int chosenButton = 3;
+    return chosenButton;
+  }
+  if (digitalRead(GBUTTON) == LOW) {
+    int chosenButton = 4;
+    return chosenButton;
+  }
+  return 0;
+}
+
+int RandomNumber() {
+  long color = random(0,5);
+  return color;
+}
+
+void wave() {
+  colorNums[waveNum] = RandomNumber();
+  waveNum++;
+
+  for (int i = 0; i < waveNum; i++) {
+    int color = colorNums[i];
+
+      if (color == 1) {
+    digitalWrite(RLED, HIGH);
+    tone(BUZZER, 1000);
+    delay(200);
+    digitalWrite(RLED, LOW);
+    noTone(BUZZER);
+  }
+  if (color == 2) {
+    digitalWrite(BLED, HIGH);
+    tone(BUZZER, 1000);
+    delay(200);
+    digitalWrite(BLED, LOW);
+    noTone(BUZZER);
+  }
+  if (color == 3) {
+    digitalWrite(YLED, HIGH);
+    tone(BUZZER, 1000);
+    delay(200);
+    digitalWrite(YLED, LOW);
+    noTone(BUZZER);
+  }
+    if (color == 4) {
+    digitalWrite(GLED, HIGH);
+    tone(BUZZER, 1000);
+    delay(200);
+    digitalWrite(GLED, LOW);
+    noTone(BUZZER);
+  }
+  delay(500);
+  }
+}
+
+int playerNumber() {
+  int buttonPressed = 0;
+  while (buttonPressed == 0) {
+    buttonPressed = ButtonToNumber();
+  }
+  if (buttonPressed == 1) {
+    digitalWrite(RLED, HIGH);
+    delay(200);
+    digitalWrite(RLED, LOW);
+  }
+  if (buttonPressed == 2) {
+    digitalWrite(BLED, HIGH);
+    delay(200);
+    digitalWrite(BLED, LOW);
+  }
+  if (buttonPressed == 3) {
+    digitalWrite(YLED, HIGH);
+    delay(200);
+    digitalWrite(YLED, LOW);
+  }
+  if (buttonPressed == 4) {
+    digitalWrite(GLED, HIGH);
+    delay(200);
+    digitalWrite(GLED, LOW);
+  }
+  return buttonPressed;
+}
+
+void checkPlayer() {
+  for (int i = 0; i < waveNum; i++) {
+    int correct = colorNums[i];
+    int actual = playerNumber();
+    
+    if (correct != actual) {
+      tone(BUZZER, 500, 200);
+      waveNum = 0;
+      return;
+    }
+    if (correct = actual) {
+      tone(BUZZER, 1000, 200);
+    }
+    delay(500);
+  }
+}
+
+void loop() {
+  if (digitalRead(RBUTTON) == LOW && digitalRead(BBUTTON) == LOW && digitalRead(YBUTTON) == LOW && digitalRead(GBUTTON) == LOW) {
+    wave();
+    checkPlayer();
+  }
+}
