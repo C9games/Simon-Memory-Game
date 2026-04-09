@@ -7,11 +7,16 @@ int RBUTTON = 7;
 int BBUTTON = 8;
 int YBUTTON = 9;
 int GBUTTON = 10;
+int PLAYBUTTON = 11;
 
 int colorNums[100];
 int waveNum = 0;
 
 void setup() {
+  randomSeed(analogRead(A0));
+  for (int i = 0; i < 100; i++) {
+    colorNums[i] = 0;
+  }
   pinMode(RLED, OUTPUT);
   pinMode(BLED, OUTPUT);
   pinMode(YLED, OUTPUT);
@@ -21,6 +26,7 @@ void setup() {
   pinMode(BBUTTON, INPUT_PULLUP);
   pinMode(YBUTTON, INPUT_PULLUP);
   pinMode(GBUTTON, INPUT_PULLUP);
+  pinMode(PLAYBUTTON, INPUT_PULLUP);
 }
 
 int ButtonToNumber() {
@@ -44,7 +50,7 @@ int ButtonToNumber() {
 }
 
 int RandomNumber() {
-  long color = random(0,5);
+  long color = random(1,5);
   return color;
 }
 
@@ -123,9 +129,12 @@ void checkPlayer() {
     if (correct != actual) {
       tone(BUZZER, 500, 200);
       waveNum = 0;
+       for (int i = 0; i < 100; i++) {
+      colorNums[i] = 0;
+    }
       return;
     }
-    if (correct = actual) {
+    if (correct == actual) {
       tone(BUZZER, 1000, 200);
     }
     delay(500);
@@ -133,7 +142,7 @@ void checkPlayer() {
 }
 
 void loop() {
-  if (digitalRead(RBUTTON) == LOW && digitalRead(BBUTTON) == LOW && digitalRead(YBUTTON) == LOW && digitalRead(GBUTTON) == LOW) {
+  if (digitalRead(PLAYBUTTON) == LOW) {
     wave();
     checkPlayer();
   }
